@@ -1,0 +1,8 @@
+student_id,semester,subject_code,subject_name,credit_hours,score,grade,status,notes
+2024001,1,ANAT101,Anatomy I,3,92,A,Passed,Excellent progress
+2024001,1,HIST101,Histology I,2,84,B,Passed,
+2024001,2,PHYS102,Physiology I,3,78,C,Passed,
+2024001,2,CHEM102,Biochemistry I,2,66,D,Passed,
+2024002,1,ANAT101,Anatomy I,3,88,B,Passed,
+2024002,1,HIST101,Histology I,2,59,F,Needs review,Retake required
+2024002,2,PHYS102,Physiology I,3,91,A,Passed,

@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zagazig Veterinary Medicine College Portal</title>
+    <link rel="icon" type="image/png" href="logof.png">
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="login-view" id="loginView">
+        <div class="brand-panel">
+          <button class="logo-button logo-button-large" data-go-home type="button" aria-label="Go to home">
+            <img src="/logo.png" alt="Zagazig Veterinary Medicine College logo" />
+          </button>
+          <p class="eyebrow">Student Portal</p>
+          <h1>Zagazig Veterinary Medicine College</h1>
+          <p class="intro">
+            Sign in with your college credentials to view activities, college services, and your semester degrees.
+          </p>
+        </div>
+
+        <form class="login-card" id="loginForm">
+          <h2>Student Login</h2>
+          <label>
+            Email
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </label>
+          <label>
+            Password
+            <input id="password" name="password" type="password" autocomplete="current-password" required />
+          </label>
+          <button class="primary-button" type="submit">Sign in</button>
+          <p class="form-message" id="loginMessage"></p>
+        </form>
+      </section>
+
+      <section class="portal-view hidden" id="portalView">
+        <header class="topbar">
+          <div class="topbar-brand">
+            <button class="logo-button logo-button-small" data-go-home type="button" aria-label="Go to home">
+              <img src="/logo.png" alt="Zagazig Veterinary Medicine College logo" />
+            </button>
+            <div>
+              <p class="eyebrow">Zagazig Veterinary Medicine College</p>
+              <h2 id="studentName">Student</h2>
+              <div class="student-info">
+                <div class="info-item student_id">
+                    <div class="label">Student ID</div>
+                    <div class="value" id="studentId">ID</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Seat Number</div>
+                    <div class="value" id="seatNum">SN</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Class</div>
+                    <div class="value">Fifth Year</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Semester</div>
+                    <div class="value">Second Semester</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Academic Year</div>
+                    <div class="value">2025 / 2026</div>
+                </div>
+            </div>
+            </div>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost-button" data-go-home type="button">Home</button>
+            <button class="ghost-button" id="logoutButton" type="button">Sign out</button>
+          </div>
+        </header>
+
+        <section class="home-page" id="homePage">
+          <div class="welcome-band">
+            <div>
+              <p class="eyebrow">Student Activities</p>
+              <h2>College services in one place</h2>
+              <p class="muted">
+                These sections are ready as editable placeholders for the information students usually need.
+              </p>
+            </div>
+            <button class="secondary-button" id="openDegreesButton" type="button">Open degrees page</button>
+          </div>
+
+          <nav class="activity-grid" aria-label="Student activities">
+            <button class="activity-card activity-card-primary" data-open-page="/degrees" type="button">
+              <span class="activity-icon">01</span>
+              <strong>Student Degrees</strong>
+              <small>Open a separate page for all 10 semesters and subject status.</small>
+            </button>
+            <button class="activity-card" data-open-page="/announcements" type="button">
+              <span class="activity-icon">02</span>
+              <strong>Announcements</strong>
+              <small>Exam dates, student affairs notices, and department updates.</small>
+            </button>
+            <button class="activity-card" data-open-page="/schedule" type="button">
+              <span class="activity-icon">03</span>
+              <strong>Schedule</strong>
+              <small>Lectures, sections, practical groups, and clinical rotations.</small>
+            </button>
+            <button class="activity-card" data-open-page="/exam-instructions" type="button">
+              <span class="activity-icon">04</span>
+              <strong>Exam Instructions</strong>
+              <small>Seat numbers, exam rules, and required documents.</small>
+            </button>
+            <button class="activity-card" data-open-page="/student-affairs" type="button">
+              <span class="activity-icon">05</span>
+              <strong>Student Affairs</strong>
+              <small>Enrollment papers, certificates, excuses, and requests.</small>
+            </button>
+            <button class="activity-card" data-open-page="/payments" type="button">
+              <span class="activity-icon">06</span>
+              <strong>Payments</strong>
+              <small>Tuition reminders, receipts, and service fee placeholders.</small>
+            </button>
+          </nav>
+        </section>
+
+        <section class="info-page hidden" id="announcementsPage" data-info-page="/announcements">
+          <div class="content-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">College Updates</p>
+                <h2>Announcements</h2>
+                <p class="muted">Edit these placeholders later with real college announcements and dates.</p>
+              </div>
+              <button class="ghost-button" data-go-home type="button">Back to activities</button>
+            </div>
+            <div class="placeholder-grid">
+              <article class="placeholder-card">
+                <span class="placeholder-label">Latest</span>
+                <h3>Midterm exam notice</h3>
+                <p>Placeholder for exam dates, locations, and any important instructions from the college.</p>
+              </article>
+              <article class="placeholder-card">
+                <span class="placeholder-label">Department</span>
+                <h3>Practical section update</h3>
+                <p>Placeholder for department-level changes, practical groups, or lab arrangements.</p>
+              </article>
+              <article class="placeholder-card">
+                <span class="placeholder-label">Reminder</span>
+                <h3>Student affairs deadline</h3>
+                <p>Placeholder for paperwork deadlines, certificate requests, or enrollment reminders.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="info-page hidden" id="schedulePage" data-info-page="/schedule">
+          <div class="content-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Timetable</p>
+                <h2>Schedule</h2>
+                <p class="muted">Use these sections later for lectures, practical classes, and clinical rotations.</p>
+              </div>
+              <button class="ghost-button" data-go-home type="button">Back to activities</button>
+            </div>
+            <div class="placeholder-grid">
+              <article class="placeholder-card">
+                <span class="placeholder-label">Lectures</span>
+                <h3>Weekly lecture table</h3>
+                <p>Placeholder for lecture days, times, halls, and subject names.</p>
+              </article>
+              <article class="placeholder-card">
+                <span class="placeholder-label">Practical</span>
+                <h3>Lab and practical groups</h3>
+                <p>Placeholder for group numbers, lab locations, instructors, and attendance notes.</p>
+              </article>
+              <article class="placeholder-card">
+                <span class="placeholder-label">Clinical</span>
+                <h3>Rotation plan</h3>
+                <p>Placeholder for hospital, farm, or field training rotation details.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="info-page hidden" id="examInstructionsPage" data-info-page="/exam-instructions">
+          <div class="content-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Exams</p>
+                <h2>Exam Instructions</h2>
+                <p class="muted">Keep the rules and exam-day requirements in clear editable sections.</p>
+              </div>
+              <button class="ghost-button" data-go-home type="button">Back to activities</button>
+            </div>
+            <div class="placeholder-grid">
+              <article class="placeholder-card">
+                <span class="placeholder-label">Before Exam</span>
+                <h3>Required documents</h3>
+                <p>Placeholder for student ID, seat number, payment receipt, or other required items.</p>
+              </article>
+              <article class="placeholder-card">
+                <span class="placeholder-label">Rules</span>
+                <h3>Inside the exam hall</h3>
+                <p>Placeholder for attendance time, allowed tools, calculator rules, and prohibited items.</p>
+              </article>
+              <article class="placeholder-card">
+                <span class="placeholder-label">Results</span>
+                <h3>Grade review requests</h3>
+                <p>Placeholder for result review timing, forms, and student affairs contact steps.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="info-page hidden" id="studentAffairsPage" data-info-page="/student-affairs">
+          <div class="content-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Services</p>
+                <h2>Student Affairs</h2>
+                <p class="muted">A placeholder area for the papers, requests, and contacts students need most.</p>
+              </div>
+              <button class="ghost-button" data-go-home type="button">Back to activities</button>
+            </div>
+            <div class="placeholder-grid">
+              <article class="placeholder-card">
+                <span class="placeholder-label">Documents</span>
+                <h3>Certificates and statements</h3>
+                <p>Placeholder for enrollment certificates, grade statements, and official document requests.</p>
+              </article>
+              <article class="placeholder-card">
+                <span class="placeholder-label">Requests</span>
+                <h3>Excuses and forms</h3>
+                <p>Placeholder for absence excuses, medical documents, and student request forms.</p>
+              </article>
+              <article class="placeholder-card">
+                <span class="placeholder-label">Contact</span>
+                <h3>Office hours</h3>
+                <p>Placeholder for office working hours, windows, phone numbers, or email contacts.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="info-page hidden" id="paymentsPage" data-info-page="/payments">
+          <div class="content-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Financial Services</p>
+                <h2>Payments</h2>
+                <p class="muted">This page is for fee reminders, receipt instructions, and payment status notes.</p>
+              </div>
+              <button class="ghost-button" data-go-home type="button">Back to activities</button>
+            </div>
+            <div class="placeholder-grid">
+              <article class="placeholder-card">
+                <span class="placeholder-label">Tuition</span>
+                <h3>Semester fees</h3>
+                <p>Placeholder for tuition deadlines, installment notes, and payment locations.</p>
+              </article>
+              <article class="placeholder-card">
+                <span class="placeholder-label">Receipts</span>
+                <h3>Receipt submission</h3>
+                <p>Placeholder for receipt upload instructions, office submission steps, or confirmation timing.</p>
+              </article>
+              <article class="placeholder-card">
+                <span class="placeholder-label">Services</span>
+                <h3>Additional fees</h3>
+                <p>Placeholder for certificate, statement, training, or service-related payment notes.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="degrees-page hidden" id="degreesPage">
+          <div class="content-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Private Academic Record</p>
+                <h2>Semester Degrees</h2>
+                <p class="muted">
+                  A sum of all the student degrees in the specified semester, as mentioned in the disclaimer, these degrees are just for test not offecial in any way. I wish all students good luck in all that to come!
+                </p>
+              </div>
+              <div class="panel-actions">
+                <button class="ghost-button" data-go-home type="button">Back to activities</button>
+                <button class="secondary-button" id="refreshDegrees" type="button">Refresh data</button>
+              </div>
+            </div>
+            <div class="semester-tabs" id="semesterTabs"></div>
+            <div class="semester-content" id="semesterContent"></div>
+          </div>
+        </section>
+      </section>
+      
+    </main>
+      <footer class="site-footer">
+        <p>
+          Disclaimer: Grades displayed on this portal are for reference only. Official college records remain the final authority.
+        </p>
+        <p>
+          Zagazig Veterinary Medicine College Portal © 2026 • Developed by vet/Ahmed Samir
+        </p>
+        </footer>
+    <script src="/app.js"></script>
+  </body>
+</html>
