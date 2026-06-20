@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -25,11 +25,11 @@
           <h2>Student Login</h2>
           <label>
             Email
-            <input id="email" name="email" type="email" autocomplete="email" required />
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="example@vet.zu.edu.eg" required />
           </label>
           <label>
             Password
-            <input id="password" name="password" type="password" autocomplete="current-password" required />
+            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="enter seat number" required />
           </label>
           <button class="primary-button" type="submit">Sign in</button>
           <p class="form-message" id="loginMessage"></p>
@@ -42,35 +42,35 @@
             <button class="logo-button logo-button-small" data-go-home type="button" aria-label="Go to home">
               <img src="/logo.png" alt="Zagazig Veterinary Medicine College logo" />
             </button>
-            <div>
+            <div class="student-summary">
               <p class="eyebrow">Zagazig Veterinary Medicine College</p>
               <h2 id="studentName">Student</h2>
               <div class="student-info">
                 <div class="info-item student_id">
-                    <div class="label">Student ID</div>
-                    <div class="value" id="studentId">ID</div>
+                  <div class="label">Student ID</div>
+                  <div class="value" id="studentId">ID</div>
                 </div>
 
                 <div class="info-item">
-                    <div class="label">Seat Number</div>
-                    <div class="value" id="seatNum">SN</div>
+                  <div class="label">Seat Number</div>
+                  <div class="value" id="seatNum">-</div>
                 </div>
 
                 <div class="info-item">
-                    <div class="label">Class</div>
-                    <div class="value">Fifth Year</div>
+                  <div class="label">Class</div>
+                  <div class="value" id="className">Fifth</div>
                 </div>
 
                 <div class="info-item">
-                    <div class="label">Semester</div>
-                    <div class="value">Second Semester</div>
+                  <div class="label">Semester</div>
+                  <div class="value" id="currentSemester">2nd</div>
                 </div>
 
                 <div class="info-item">
-                    <div class="label">Academic Year</div>
-                    <div class="value">2025 / 2026</div>
+                  <div class="label">Academic Year</div>
+                  <div class="value" id="academicYear">2025/2026</div>
                 </div>
-            </div>
+              </div>
             </div>
           </div>
           <div class="topbar-actions">
@@ -122,7 +122,57 @@
               <strong>Payments</strong>
               <small>Tuition reminders, receipts, and service fee placeholders.</small>
             </button>
+            <!-- GAME START: remove this activity button with the game page, CSS, and JS blocks to delete the game. -->
+            <button class="activity-card game-activity-card" data-open-page="/game" type="button">
+              <span class="activity-icon">07</span>
+              <strong>Vet Match Game</strong>
+              <small>A simple study break game inside the student portal.</small>
+            </button>
+            <!-- GAME END -->
           </nav>
+
+          <section class="handler-widget" aria-label="Website handler tracker">
+            <div class="widget-heading">
+              <div>
+                <p class="eyebrow">Website Handler</p>
+                <h2>Portal Tracker</h2>
+              </div>
+              <button class="ghost-button compact-button" id="refreshStats" type="button">Refresh</button>
+            </div>
+            <div class="stats-grid">
+              <article class="stat-card">
+                <span class="stat-label">Online now</span>
+                <strong id="onlineUsers">0</strong>
+                <small>Active in the last 5 minutes</small>
+              </article>
+              <article class="stat-card">
+                <span class="stat-label">Total logins</span>
+                <strong id="totalLogins">0</strong>
+                <small>Since the server started</small>
+              </article>
+              <article class="stat-card">
+                <span class="stat-label">Unique students</span>
+                <strong id="uniqueStudentsLoggedIn">0</strong>
+                <small>Students who logged in</small>
+              </article>
+              <article class="stat-card">
+                <span class="stat-label">Registered</span>
+                <strong id="registeredStudents">0</strong>
+                <small>Total number of students</small>
+              </article>
+              <article class="stat-card">
+                <span class="stat-label">Default subjects</span>
+                <strong id="defaultSubjects">0</strong>
+                <small>Total subjects studied</small>
+              </article>
+              <article class="stat-card">
+                <span class="stat-label">Grade rows</span>
+                <strong id="gradeRows">0</strong>
+                <small>Total grades per students</small>
+              </article>
+            </div>
+            <p class="widget-note" id="statsUpdatedAt">Stats update when this page opens.</p>
+          </section>
         </section>
 
         <section class="info-page hidden" id="announcementsPage" data-info-page="/announcements">
@@ -275,6 +325,30 @@
           </div>
         </section>
 
+        <!-- GAME START: remove this whole section with the matching CSS and JS blocks to delete the game. -->
+        <section class="info-page hidden" id="gamePage" data-info-page="/game">
+          <div class="content-panel game-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Student Break</p>
+                <h2>Vet Match Game</h2>
+                <p class="muted">Match each veterinary topic with its related clue. It is only for fun and can be edited later.  <strong>Still under development</strong></p>
+              </div>
+              <div class="panel-actions">
+                <button class="ghost-button" data-go-home type="button">Back to activities</button>
+                <button class="secondary-button" id="restartGame" type="button">Restart game</button>
+              </div>
+            </div>
+            <div class="game-status">
+              <span>Moves: <strong id="gameMoves">0</strong></span>
+              <span>Matches: <strong id="gameMatches">0</strong> / 6</span>
+              <span id="gameMessage">Choose two cards to start.</span>
+            </div>
+            <div class="game-board" id="gameBoard" aria-label="Vet match card game"></div>
+          </div>
+        </section>
+        <!-- GAME END -->
+
         <section class="degrees-page hidden" id="degreesPage">
           <div class="content-panel">
             <div class="panel-heading">
@@ -296,15 +370,11 @@
         </section>
       </section>
       
-    </main>
       <footer class="site-footer">
-        <p>
-          Disclaimer: Grades displayed on this portal are for reference only. Official college records remain the final authority.
-        </p>
-        <p>
-          Zagazig Veterinary Medicine College Portal © 2026 • Developed by vet/Ahmed Samir
-        </p>
-        </footer>
+        <p>Disclaimer: Grades displayed on this portal are for reference only. Official college records remain the final authority.</p>
+        <p>Zagazig Veterinary Medicine College Portal (c) 2026 - Developed by vet-student/ <strong>Ahmed Samir</strong>, everything you see is his creation.</p>
+      </footer>
+    </main>
     <script src="/app.js"></script>
   </body>
 </html>

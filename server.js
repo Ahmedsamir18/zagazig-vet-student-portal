@@ -8,6 +8,12 @@ const config = require("./config/columns");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || "change-this-secret-before-online-deployment";
+const ACTIVE_WINDOW_MS = 5 * 60 * 1000;
+const portalStats = {
+  totalLogins: 0,
+  uniqueStudentIds: new Set(),
+  activeSessions: new Map()
+};
 
 app.use(express.json());
 app.use(
@@ -23,6 +29,30 @@ app.use(
   })
 );
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use((req, res, next) => {
+  if (req.session.student) {
+    markSessionActive(req);
+  }
+  next();
+});
+
+function markSessionActive(req) {
+  portalStats.activeSessions.set(req.sessionID, {
+    studentId: req.session.student.id,
+    name: req.session.student.name,
+    lastSeen: Date.now()
+  });
+}
+
+function cleanupActiveSessions() {
+  const cutoff = Date.now() - ACTIVE_WINDOW_MS;
+  portalStats.activeSessions.forEach((sessionInfo, sessionId) => {
+    if (sessionInfo.lastSeen < cutoff) {
+      portalStats.activeSessions.delete(sessionId);
+    }
+  });
+}
 
 function resolveDataFile(primaryPath, fallbackPath) {
   const primary = path.join(__dirname, primaryPath);
@@ -106,8 +136,17 @@ async function loadStudents() {
     id: getColumn(row, c.studentId),
     name: getColumn(row, c.name),
     email: getColumn(row, c.email).toLowerCase(),
-    password: getColumn(row, c.password)
+    password: getColumn(row, c.password),
+    seatNumber: getColumn(row, c.seatNumber),
+    className: getColumn(row, c.className),
+    currentSemester: getColumn(row, c.currentSemester),
+    academicYear: getColumn(row, c.academicYear)
   }));
+}
+
+async function countDegreeRows() {
+  const rows = await readSheetRows(config.files.degrees, config.files.degreesFallback);
+  return rows.length;
 }
 
 async function loadDegreesForStudent(studentId) {
@@ -197,13 +236,20 @@ app.post("/api/login", asyncRoute(async (req, res) => {
     id: student.id,
     name: student.name,
     email: student.email,
-    pass: student.password
+    seatNumber: student.password || "SN",
+    className: student.className || "Fifth",
+    currentSemester: student.currentSemester || "2nd",
+    academicYear: student.academicYear || "2025/2026"
   };
+  portalStats.totalLogins += 1;
+  portalStats.uniqueStudentIds.add(student.id);
+  markSessionActive(req);
 
   res.json({ student: req.session.student });
 }));
 
 app.post("/api/logout", (req, res) => {
+  portalStats.activeSessions.delete(req.sessionID);
   req.session.destroy(() => {
     res.json({ ok: true });
   });
@@ -229,6 +275,24 @@ app.get("/api/degrees", requireLogin, asyncRoute(async (req, res) => {
   });
 
   res.json({ semesters });
+}));
+
+app.get("/api/stats", requireLogin, asyncRoute(async (req, res) => {
+  cleanupActiveSessions();
+  const students = await loadStudents();
+  const defaultSubjects = await loadDefaultSubjects();
+  const gradeRows = await countDegreeRows();
+
+  res.json({
+    onlineUsers: portalStats.activeSessions.size,
+    totalLogins: portalStats.totalLogins,
+    uniqueStudentsLoggedIn: portalStats.uniqueStudentIds.size,
+    registeredStudents: students.length,
+    defaultSubjects: defaultSubjects.length,
+    gradeRows,
+    activeWindowMinutes: ACTIVE_WINDOW_MS / 60000,
+    updatedAt: new Date().toISOString()
+  });
 }));
 
 app.get("*", (req, res) => {

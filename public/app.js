@@ -8,13 +8,38 @@ const loginMessage = document.querySelector("#loginMessage");
 const studentName = document.querySelector("#studentName");
 const seatNum = document.querySelector("#seatNum");
 const studentId = document.querySelector("#studentId");
+const className = document.querySelector("#className");
+const currentSemester = document.querySelector("#currentSemester");
+const academicYear = document.querySelector("#academicYear");
 const logoutButton = document.querySelector("#logoutButton");
 const refreshDegrees = document.querySelector("#refreshDegrees");
+const refreshStats = document.querySelector("#refreshStats");
 const openDegreesButton = document.querySelector("#openDegreesButton");
 const semesterTabs = document.querySelector("#semesterTabs");
 const semesterContent = document.querySelector("#semesterContent");
 const homeButtons = document.querySelectorAll("[data-go-home]");
 const pageOpeners = document.querySelectorAll("[data-open-page]");
+
+// GAME START: remove this block with the game HTML and CSS blocks to delete the game.
+const gameBoard = document.querySelector("#gameBoard");
+const restartGame = document.querySelector("#restartGame");
+const gameMoves = document.querySelector("#gameMoves");
+const gameMatches = document.querySelector("#gameMatches");
+const gameMessage = document.querySelector("#gameMessage");
+const gamePairs = [
+  { pair: "anatomy", text: "Anatomy", match: "Body structures" },
+  { pair: "surgery", text: "Surgery", match: "Operating room" },
+  { pair: "microbiology", text: "Microbiology", match: "Bacteria" },
+  { pair: "pharmacology", text: "Pharmacology", match: "Medicines" },
+  { pair: "pathology", text: "Pathology", match: "Disease changes" },
+  { pair: "nutrition", text: "Nutrition", match: "Animal feed" }
+];
+let gameCards = [];
+let flippedCards = [];
+let matchedPairs = 0;
+let moveCount = 0;
+let gameLocked = false;
+// GAME END
 
 let semesters = [];
 let activeSemester = 1;
@@ -44,8 +69,11 @@ function escapeHtml(value) {
 function showPortal(student) {
   currentStudent = student;
   studentName.textContent = student.name || "Student";
-  seatNum.textContent = student.pass || "SN";
+  seatNum.textContent = student.seatNumber || "password";
   studentId.textContent = student.id || "ID";
+  className.textContent = student.className || "Fifth class";
+  currentSemester.textContent = student.currentSemester || "Second semester";
+  academicYear.textContent = student.academicYear || "2025/2026";
   loginView.classList.add("hidden");
   portalView.classList.remove("hidden");
   routeTo(window.location.pathname, false);
@@ -77,6 +105,38 @@ function routeTo(path, pushState = true) {
   if (isDegrees) {
     loadDegrees();
   }
+
+  if (isHome) {
+    loadStats();
+  }
+
+  if (path === "/game") {
+    startGame();
+  }
+}
+
+function setStat(id, value) {
+  const element = document.querySelector(`#${id}`);
+  if (element) element.textContent = value;
+}
+
+async function loadStats() {
+  const note = document.querySelector("#statsUpdatedAt");
+  try {
+    const stats = await requestJson("/api/stats");
+    setStat("onlineUsers", stats.onlineUsers);
+    setStat("totalLogins", stats.totalLogins);
+    setStat("uniqueStudentsLoggedIn", stats.uniqueStudentsLoggedIn);
+    setStat("registeredStudents", stats.registeredStudents);
+    setStat("defaultSubjects", stats.defaultSubjects);
+    setStat("gradeRows", stats.gradeRows);
+    if (note) {
+      const updated = new Date(stats.updatedAt);
+      note.textContent = `Last updated ${updated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}. Online means active in the last ${stats.activeWindowMinutes} minutes.`;
+    }
+  } catch (error) {
+    if (note) note.textContent = "Stats are not available right now.";
+  }
 }
 
 function statusClass(status) {
@@ -85,6 +145,91 @@ function statusClass(status) {
   if (normalized.includes("waiting") || normalized.includes("pending") || normalized.includes("incomplete")) return "warn";
   return "";
 }
+
+// GAME START: remove this block with the game HTML and CSS blocks to delete the game.
+function shuffleCards(cards) {
+  return [...cards].sort(() => Math.random() - 0.5);
+}
+
+function buildGameCards() {
+  return shuffleCards(
+    gamePairs.flatMap((item) => [
+      { pair: item.pair, text: item.text },
+      { pair: item.pair, text: item.match }
+    ])
+  );
+}
+
+function updateGameStatus(message) {
+  if (gameMoves) gameMoves.textContent = moveCount;
+  if (gameMatches) gameMatches.textContent = matchedPairs;
+  if (gameMessage) gameMessage.textContent = message;
+}
+
+function renderGameBoard() {
+  if (!gameBoard) return;
+  gameBoard.innerHTML = gameCards
+    .map(
+      (card, index) => `
+        <button class="game-card ${card.matched ? "is-matched" : ""} ${card.flipped ? "is-flipped" : ""}" data-card-index="${index}" type="button">
+          <span class="game-card-face game-card-back">?</span>
+          <span class="game-card-face game-card-front">${escapeHtml(card.text)}</span>
+        </button>
+      `
+    )
+    .join("");
+}
+
+function startGame() {
+  if (!gameBoard) return;
+  gameCards = buildGameCards().map((card) => ({ ...card, flipped: false, matched: false }));
+  flippedCards = [];
+  matchedPairs = 0;
+  moveCount = 0;
+  gameLocked = false;
+  updateGameStatus("Choose two cards to start.");
+  renderGameBoard();
+}
+
+function flipGameCard(index) {
+  if (gameLocked || !gameCards[index] || gameCards[index].flipped || gameCards[index].matched) return;
+
+  gameCards[index].flipped = true;
+  flippedCards.push(index);
+  renderGameBoard();
+
+  if (flippedCards.length < 2) {
+    updateGameStatus("Choose one more card.");
+    return;
+  }
+
+  moveCount += 1;
+  const [firstIndex, secondIndex] = flippedCards;
+  const firstCard = gameCards[firstIndex];
+  const secondCard = gameCards[secondIndex];
+
+  if (firstCard.pair === secondCard.pair) {
+    firstCard.matched = true;
+    secondCard.matched = true;
+    matchedPairs += 1;
+    flippedCards = [];
+    updateGameStatus(matchedPairs === gamePairs.length ? "Great work. You matched every pair." : "Nice match. Keep going.");
+    renderGameBoard();
+    return;
+  }
+
+  gameLocked = true;
+  updateGameStatus("Not a match. Try another pair.");
+  setTimeout(() => {
+    firstCard.flipped = false;
+    secondCard.flipped = false;
+    flippedCards = [];
+    gameLocked = false;
+    updateGameStatus("Choose two cards.");
+    renderGameBoard();
+  }, 750);
+}
+// GAME END
 
 function renderSemesterTabs() {
   semesterTabs.innerHTML = semesters
@@ -185,6 +330,7 @@ logoutButton.addEventListener("click", async () => {
 });
 
 refreshDegrees.addEventListener("click", loadDegrees);
+refreshStats.addEventListener("click", loadStats);
 openDegreesButton.addEventListener("click", () => routeTo("/degrees"));
 
 homeButtons.forEach((button) => {
@@ -194,6 +340,20 @@ homeButtons.forEach((button) => {
 pageOpeners.forEach((button) => {
   button.addEventListener("click", () => routeTo(button.dataset.openPage));
 });
+
+// GAME START: remove this block with the game HTML and CSS blocks to delete the game.
+if (restartGame) {
+  restartGame.addEventListener("click", startGame);
+}
+
+if (gameBoard) {
+  gameBoard.addEventListener("click", (event) => {
+    const card = event.target.closest("[data-card-index]");
+    if (!card) return;
+    flipGameCard(Number(card.dataset.cardIndex));
+  });
+}
+// GAME END
 
 semesterTabs.addEventListener("click", (event) => {
   const button = event.target.closest(".semester-tab");

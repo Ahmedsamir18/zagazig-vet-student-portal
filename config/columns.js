@@ -14,7 +14,11 @@ module.exports = {
     studentId: "student_id",
     name: "name",
     email: "email",
-    password: "password"
+    password: "password",
+    seatNumber: "seat_number",
+    className: "class",
+    currentSemester: "current_semester",
+    academicYear: "academic_year"
   },
 
   degreesColumns: {

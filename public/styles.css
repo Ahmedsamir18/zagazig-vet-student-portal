@@ -25,7 +25,6 @@ body {
   background:
     radial-gradient(circle at top left, rgba(15, 139, 141, 0.16), transparent 32rem),
     linear-gradient(135deg, #f7fbfb 0%, #edf5f2 55%, #fff4ee 100%);
-  padding-bottom: 50px;
 }
 
 button,
@@ -46,6 +45,9 @@ button {
   min-height: 100vh;
   margin: 0 auto;
   padding: 28px 0;
+  display: grid;
+  align-content: start;
+  gap: 16px;
 }
 
 .login-view {
@@ -126,7 +128,8 @@ h2 {
 
 .login-card,
 .content-panel,
-.welcome-band {
+.welcome-band,
+.handler-widget {
   border: 1px solid rgba(217, 226, 228, 0.9);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.9);
@@ -231,7 +234,7 @@ h2 {
   position: sticky;
   top: 0;
   z-index: 5;
-  padding: 16px;
+  padding: 14px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 10px 34px rgba(18, 43, 47, 0.08);
@@ -242,8 +245,12 @@ h2 {
 .topbar-actions,
 .panel-actions {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
+}
+
+.topbar-brand {
+  min-width: 0;
 }
 
 .topbar-actions,
@@ -253,36 +260,38 @@ h2 {
 }
 
 .student-info {
-    padding-top: 10px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 760px;
+  margin-top: 8px;
 }
 
 .info-item {
-    text-align: center;
-    background: #f5f7f7;
-    border: 1px solid #d6d9dc;
-    border-radius: 12px;
-    padding: 8px 10px;
-    box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  border: 1px solid #dce7e8;
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: #f5faf9;
 }
 
 .label {
-    font-size: 11px;
-    color: #6b7280;
+  color: #68787d;
+  font-size: 0.72rem;
+  font-weight: 800;
 }
 
 .value {
-    font-size: 15px;
-    font-weight: 600;
-    color: #0b7d7d;
-    margin-top: 4px;
+  color: var(--teal-dark);
+  font-size: 0.78rem;
+  font-weight: 900;
 }
 
 .student_id {
-    grid-column: span 2;
+  min-width: auto;
 }
 
 .welcome-band {
@@ -349,6 +358,68 @@ button.activity-card:hover {
   font-weight: 900;
 }
 
+.handler-widget {
+  padding: 18px;
+}
+
+.widget-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.compact-button {
+  min-height: 38px;
+  padding: 0 14px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stat-card {
+  min-height: 112px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfefd;
+}
+
+.stat-card strong,
+.stat-card small,
+.stat-label {
+  display: block;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.stat-card strong {
+  margin: 8px 0 4px;
+  color: var(--teal-dark);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.stat-card small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.widget-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
 .placeholder-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -368,6 +439,10 @@ button.activity-card:hover {
   margin: 10px 0 8px;
   font-size: 1.08rem;
   letter-spacing: 0;
+}
+
+input::placeholder {
+  color: rgba(0, 0, 0, 0.3);
 }
 
 .placeholder-card p {
@@ -487,10 +562,28 @@ tr:last-child td {
   text-align: center;
 }
 
+.site-footer {
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 14px;
+  border: 1px solid rgba(217, 226, 228, 0.9);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #69787d;
+  text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.site-footer p {
+  margin: 2px 0;
+}
+
 @media (max-width: 900px) {
   .login-view,
   .activity-grid,
-  .placeholder-grid {
+  .placeholder-grid,
+  .stats-grid {
     grid-template-columns: 1fr;
   }
 
@@ -521,6 +614,10 @@ tr:last-child td {
   .semester-tabs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .student-info {
+    max-width: none;
+  }
 }
 
 @media (max-width: 560px) {
@@ -536,7 +633,8 @@ tr:last-child td {
 
   .login-card,
   .content-panel,
-  .welcome-band {
+  .welcome-band,
+  .handler-widget {
     padding: 16px;
   }
 
@@ -552,6 +650,7 @@ tr:last-child td {
 
   .topbar-brand {
     align-items: flex-start;
+    width: 100%;
   }
 
   h1 {
@@ -565,26 +664,22 @@ tr:last-child td {
     white-space: normal;
   }
 
-.site-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-
-    padding: 10px 20px;
-    text-align: center;
-
-    font-size: 13px;
-    color: #6c757d;
-
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(5px);
-
-    border-top: 1px solid #d9d9d9;
-    z-index: 1000;
-}
-
   .semester-tabs {
     grid-template-columns: 1fr;
+  }
+
+  .student-info {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .info-item {
+    border-radius: 8px;
+    justify-content: space-between;
+  }
+
+  .widget-heading {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

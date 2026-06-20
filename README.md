@@ -32,6 +32,14 @@ Required columns:
 student_id, name, email, password
 ```
 
+Optional columns shown in the student header:
+
+```text
+seat_number, class, current_semester, academic_year
+```
+
+If these optional columns are missing, the site shows `Not set`.
+
 Example:
 
 ```text
@@ -162,6 +170,19 @@ The activities cards are placeholders that can be edited later in:
 ```text
 public/index.html
 ```
+
+## Portal tracker
+
+The home page includes a small handler tracker with:
+
+- online users active in the last 5 minutes
+- total logins since the server started
+- unique students logged in since the server started
+- registered students from the credentials file
+- default subject rows
+- grade rows
+
+This is a lightweight in-memory tracker. The counts reset when the server restarts.
 
 ## Deployment notes
 
